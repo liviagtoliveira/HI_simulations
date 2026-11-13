@@ -37,13 +37,12 @@ def cross_correlation(arr_V, stacked1, stacked2):
     return offset, sigma_offset
 
 
-def direct_fitting(arr_V, stacked1, stacked2, plot_distributions=False):
+def direct_fitting(arr_V, stacked1, stacked2):
     p0_1 = [np.max(stacked1), arr_V[np.argmax(stacked1)], 60.0, np.median(stacked1)]
     popt1, pcov1 = curve_fit(Gaussian, arr_V, stacked1, p0=p0_1) # fits Gaussian to stacked spectrum of the 1st epoch
     A1, x01, sigma1, C1 = popt1 # fitted parameters
     A1_err, x01_err, sigma1_err, C1_err = np.sqrt(np.diag(pcov1)) # uncertainties of the parameters
 
-    #p0_2 = [A1, x01+100, sigma1, C1]
     popt2, pcov2 = curve_fit(Gaussian, arr_V, stacked2, p0=popt1) # fits Gaussian to stacked spectrum of the 2nd epoch
     A2, x02, sigma2, C2 = popt2 # fitted parameters
     A2_err, x02_err, sigma2_err, C2_err = np.sqrt(np.diag(pcov2)) # uncertainties of the parameters
@@ -53,10 +52,10 @@ def direct_fitting(arr_V, stacked1, stacked2, plot_distributions=False):
 
     plt.plot(arr_V, stacked1, linewidth=0.5, label='1st survey')
     plt.plot(arr_V, stacked2, linewidth=0.5, label='2nd survey')
-    plt.plot(arr_V, Gaussian(arr_V, A1, x01, sigma1, C1), color='tab:blue', label='Gaussian fit for the 1st survey')
-    plt.plot(arr_V, Gaussian(arr_V, A2, x02, sigma2, C2), color='tab:orange', label='Gaussian fit for the 2nd survey')
-    plt.axvline(x01, color='tab:blue', linestyle=':', label=f'1st survey center = {x01:.1f} km/s')
-    plt.axvline(x02, color='tab:orange', linestyle=':', label=f'2nd survey center = {x02:.1f} km/s')
+    plt.plot(arr_V, Gaussian(arr_V, A1, x01, sigma1, C1), label='Gaussian fit for the 1st survey')
+    plt.plot(arr_V, Gaussian(arr_V, A2, x02, sigma2, C2), label='Gaussian fit for the 2nd survey')
+    plt.axvline(x01, linestyle=':', color='tab:green', label=f'1st survey center = {x01:.1f} km/s')
+    plt.axvline(x02, linestyle=':', color='tab:red', label=f'2nd survey center = {x02:.1f} km/s')
     plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
     plt.xlabel('Velocity [km/s]')
     plt.ylabel('Flux [Jy]')

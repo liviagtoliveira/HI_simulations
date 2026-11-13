@@ -24,5 +24,4 @@ def HI_emission_line(arr_V, line_flux, psi_0, psi_max, w_20, w_50, w_peak):
     
     return pure_line + spectral_shape
 
-# SKADS
-# Continuum
+# Continuum is missing
